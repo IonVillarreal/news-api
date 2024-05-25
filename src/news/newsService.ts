@@ -9,29 +9,35 @@ prisma.$on('query', (e) => {
     console.log(`Duration: ${e.duration}ms`);
 });
 
-export const getAllNews = async (page: number, pageSize: number): Promise<News[]> => {
+export const getAllNews = (page: number, pageSize: number): Promise<News[]> => {
     const skip = (page - 1) * pageSize;
-    return await prisma.news.findMany({
+    return prisma.news.findMany({
         skip,
         take: pageSize,
     });
 };
 
-export const getNewsById = async (id: number): Promise<News | null> => {
-    return await prisma.news.findUnique({
+export const getNewsById = (id: number): Promise<News | null> => {
+    return prisma.news.findUnique({
         where: {id},
     });
 };
 
-export const createNews = async (newsData: Omit<News, 'id'>): Promise<News> => {
-    return await prisma.news.create({
+export const createNews = (newsData: Omit<News, 'id'>): Promise<News> => {
+    return prisma.news.create({
+        data: {...newsData, date: new Date()},
+    });
+};
+
+export const updateNews = (id: number, newsData: Partial<News>): Promise<News> => {
+    return prisma.news.update({
+        where: {id},
         data: newsData,
     });
 };
 
-export const updateNews = async (id: number, newsData: Partial<News>): Promise<News> => {
-    return await prisma.news.update({
+export const deleteNews = (id: number): Promise<News> => {
+    return prisma.news.delete({
         where: {id},
-        data: newsData,
     });
 };
