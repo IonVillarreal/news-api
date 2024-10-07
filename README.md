@@ -204,7 +204,3 @@ Ejemplo de petición:
 ```bash
 curl --location --request DELETE 'http://localhost:3000/news/1'
 ```
-
---- 
-
-Si necesitas agregar más detalles o cambiar algo en particular, házmelo saber.
