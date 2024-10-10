@@ -1,11 +1,12 @@
 import {Request, Response} from 'express';
 import * as newsService from './newsService';
+import 'dotenv/config'
 
 export const getAllNews = async (req: Request, res: Response): Promise<void> => {
     const page = parseInt(req.query.page as string) || 1;
     const pageSize = parseInt(req.query.pageSize as string) || 10;
-    const news = await newsService.getAllNews(page, pageSize);
-    res.json(news);
+    const newsResponse = await newsService.getAllNews(page, pageSize);
+    res.json(newsResponse);
 };
 
 export const getNewsById = async (req: Request, res: Response): Promise<void> => {

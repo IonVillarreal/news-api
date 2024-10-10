@@ -1,4 +1,3 @@
-import {PrismaClient} from '@prisma/client';
 import {News} from '@prisma/client';
 
 import prisma from '../prismaClient';
@@ -9,12 +8,22 @@ prisma.$on('query', (e) => {
     console.log(`Duration: ${e.duration}ms`);
 });
 
-export const getAllNews = (page: number, pageSize: number): Promise<News[]> => {
+export interface NewsResponse {
+    news: News[];
+    totalCount: number;
+}
+
+export const getAllNews = async (page: number, pageSize: number): Promise<NewsResponse> => {
     const skip = (page - 1) * pageSize;
-    return prisma.news.findMany({
-        skip,
-        take: pageSize,
-    });
+    const [news, totalCount] = await Promise.all([
+        prisma.news.findMany({
+            skip,
+            take: pageSize,
+        }),
+        prisma.news.count(),
+    ]);
+
+    return { news, totalCount };
 };
 
 export const getNewsById = (id: number): Promise<News | null> => {
